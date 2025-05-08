@@ -3,9 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
+/* @theme {
   --color-back: #890000;
-}
+} */
+
+@theme {
+  --color-other: #890000;
+} 
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
