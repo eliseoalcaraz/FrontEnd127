@@ -21,7 +21,7 @@ export default function HomePage() {
         <Link href="/sign-up">
           {/* <button className="w-full bg-white text-red-900 font-semibold py-3 rounded-xl text-lg shadow-2xl transition hover:bg-gray-100">Get Started</button> */}
           <button className="w-full text-red-900 font-semibold py-3 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-black-100" style={{ backgroundColor: '#FDFDFD', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1), 0 4px 20px rgba(0, 0, 0, 0.15)'}}>
-            Get Starteddd
+            Get Started
           </button>
         </Link>
         <Link href="/sign-in">

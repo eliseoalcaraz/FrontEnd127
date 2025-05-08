@@ -63,7 +63,8 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
     return (
         <div className="min-h-screen flex flex-col justify-end px-4 w-full max-w-md " style={{ backgroundColor: '#FDFDFD' }}>
-        <div className="text-center my-auto">
+        {/* <div className="text-center my-auto"> */}
+        <div className="flex justify-center items-center">
             {/* <h1 className="text-white text-3xl font-bold">Attends</h1> */}
             <img src="/img/logo.png" alt="Attends Logo" className="h-64 w-auto" />
         </div>
@@ -81,7 +82,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
                                     <Input
                                         placeholder="Name"
                                         {...field}
-                                        className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5"
+                                        // className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5"
+                                        className="h-10 px-3 text-sm border rounded-md w-full py-5 bg-white"
+                                        // style = {{ backgroundColor:'#aaaaaa'}}
                                     />
                                 </FormControl>
                                 <FormMessage className="text-xs min-h-[16px]" />
@@ -138,7 +141,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
             <p className="text-center text-sm text-white mt-4 mb-8">
                 {isSignIn ? "Don't" : 'Already'} have an account? {" "}
                 <Link href={isSignIn ? '/sign-up' : '/sign-in'}>
-                    <span className="text-red-700 font-bold cursor-pointer">
+                    {/* <span className="font-bold cursor-pointer text-[#00563d]" > */}
+                    {/* <span className="font-bold cursor-pointer text-[#ffc0cb]" > */}
+                    {/* <span className="font-bold cursor-pointer text-[#c0ffd4]" > */}
+                    {/* <span className="font-bold cursor-pointer text-[#92f7b2]" > */}
+                    <span className="font-bold cursor-pointer text-[#4a915f]" >
                         {isSignIn ? 'Sign up' : 'Login' }
                     </span>
                 </Link>
