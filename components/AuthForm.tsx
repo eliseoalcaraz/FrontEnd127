@@ -47,11 +47,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
             if (type === 'sign-up') {
                 toast.success('Account created successfully');
                 console.log('Sign Up');
-                router.push('/');
+                router.push('/home');
             } else {
                 toast.success('Log in successfully.')
                 console.log('Sign up')
-                router.push('/');
+                router.push('/home');
             }
     } catch (error) {
             console.log(error)
@@ -62,12 +62,12 @@ const AuthForm = ({ type }: { type: FormType }) => {
     const isSignIn = type === "sign-in";
 
     return (
-        <div className="min-h-screen flex flex-col justify-end bg-back px-4 w-full max-w-md ">
-        <div className="text-center my-auto">
-            <h1 className="text-white text-3xl font-bold">Attends</h1>
+        <div className="min-h-screen flex flex-col justify-end px-4 w-full max-w-md " style={{ backgroundColor: '#FDFDFD' }}>
+        <div className="flex justify-center items-center">
+            <img src="/img/logo.png" alt="Attends Logo" className="h-64 w-auto" />
         </div>
 
-        <div className="bg-white w-full max-w-md mx-auto rounded-t-3xl px-6 py-8 shadow-md">
+        <div className="bg-other w-full max-w-md mx-auto rounded-t-3xl px-6 py-8 shadow-md">
             <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 {!isSignIn && (
@@ -80,7 +80,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                                     <Input
                                         placeholder="Name"
                                         {...field}
-                                        className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5"
+                                        className="h-10 px-3 text-sm border rounded-md w-full py-5"
                                     />
                                 </FormControl>
                                 <FormMessage className="text-xs min-h-[16px]" />
@@ -126,17 +126,18 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
                 <Button
                 type="submit"
-                className="mb-4 w-full bg-back py-7 rounded-full text-white font-semibold text-center cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]"
+                className="mb-4 w-full py-7 rounded-full text-black font-semibold text-center cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]"
+                style={{ backgroundColor: '#FDFDFD' }}
                 >
                 {type === 'sign-in' ? 'Login': 'Sign Up'}
                 </Button>
             </form>
             </Form>
 
-            <p className="text-center text-sm text-black mt-4 mb-8">
+            <p className="text-center text-sm text-white mt-4 mb-8">
                 {isSignIn ? "Don't" : 'Already'} have an account? {" "}
                 <Link href={isSignIn ? '/sign-up' : '/sign-in'}>
-                    <span className="text-red-700 font-bold cursor-pointer">
+                    <span className="font-bold cursor-pointer text-[#4a915f]" >
                         {isSignIn ? 'Sign up' : 'Login' }
                     </span>
                 </Link>

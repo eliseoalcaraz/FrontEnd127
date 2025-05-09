@@ -3,8 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
+/* @theme {
   --color-back: #890000;
+} */
+
+@theme {
+  --color-other: #890000;
+  --color-myred: #890000;
 }
 
 @theme inline {
