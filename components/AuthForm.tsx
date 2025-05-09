@@ -47,11 +47,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
             if (type === 'sign-up') {
                 toast.success('Account created successfully');
                 console.log('Sign Up');
-                router.push('/dashboard');
+                router.push('/home');
             } else {
                 toast.success('Log in successfully.')
                 console.log('Sign up')
-                router.push('/dashboard');
+                router.push('/home');
             }
     } catch (error) {
             console.log(error)
@@ -80,7 +80,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
                                     <Input
                                         placeholder="Name"
                                         {...field}
-                                        className="h-10 px-3 text-sm border rounded-md w-full py-5 bg-white"
+                                        className="h-10 px-3 text-sm border rounded-md w-full py-5"
                                     />
                                 </FormControl>
                                 <FormMessage className="text-xs min-h-[16px]" />
