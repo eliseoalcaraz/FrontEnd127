@@ -44,6 +44,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
     function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+            // this is for displaying of the email at the top of home.
+            //home can be accessed through app > root > home
+            localStorage.setItem('userEmail', values.email);
+            
             if (type === 'sign-up') {
                 toast.success('Account created successfully');
                 console.log('Sign Up');
