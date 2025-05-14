@@ -7,7 +7,7 @@ import { useEffect, useState } from "react" //for the email display
 const Home = () => {
 
   const router = useRouter();
-  const [email, setEmail] = useState(''); // Add this state
+  const [email, setEmail] = useState(''); 
 
   useEffect(() => {
     // get the email from localStorage
