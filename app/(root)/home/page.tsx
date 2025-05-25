@@ -2,10 +2,20 @@
 
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react" //for the email display
 
 const Home = () => {
 
   const router = useRouter();
+  const [email, setEmail] = useState(''); 
+
+  useEffect(() => {
+    // get the email from localStorage
+    const storedEmail = localStorage.getItem('userEmail');
+    if (storedEmail) {
+      setEmail(storedEmail);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start w-full gap-10 pt-10">
@@ -13,7 +23,8 @@ const Home = () => {
       <div className="mb-60">
         <Button className="bg-myred text-white font-medium text-lg px-20 py-8 rounded-full cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]" onClick={() => router.push('/profile')}>
           <img src="/profile.svg" alt="Profile" className="w-10 h-10 mr-2" />
-          elipalcaraz@up.edu.ph
+          {/* elipalcaraz@up.edu.ph */}
+          {email}
         </Button>
       </div>
 
