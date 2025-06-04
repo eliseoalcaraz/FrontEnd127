@@ -2,20 +2,35 @@
 
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react" //for the email display
+import { useEffect, useState } from "react"
 
 const Home = () => {
 
   const router = useRouter();
-  const [email, setEmail] = useState('');
+
+  const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
-    // get the email from localStorage
-    const storedEmail = localStorage.getItem('userEmail');
-    if (storedEmail) {
-      setEmail(storedEmail);
+    const fetchEmail = async () => {
+      try {
+        const response = await fetch('/api/auth/status');
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setEmail(data.user.email || "No email found");
+        } else {
+          console.error("Failed to fetch email:", data.message);
+          setEmail("No email found");
+        }
+      } catch (error) {
+        console.error("Error fetching email:", error);
+      }
     }
-  }, []);
+
+    fetchEmail();
+  }, [email]);
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-start w-full pt-10 mx-2">
@@ -23,7 +38,6 @@ const Home = () => {
       <div className="mb-60">
         <Button className="bg-myred text-white font-medium text-lg px-20 py-8 rounded-full cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]" onClick={() => router.push('/profile')}>
           <img src="/profile.svg" alt="Profile" className="w-10 h-10 mr-2" />
-          {/* elipalcaraz@up.edu.ph */}
           {email}
         </Button>
       </div>
