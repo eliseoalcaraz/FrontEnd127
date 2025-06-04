@@ -7,7 +7,6 @@ import TitleCard from '@/components/TitleCard';
 import JoinCourse from '@/components/JoinCourse';
 
 import { enrollmentSample } from '@/content/data';
-import { code } from 'framer-motion/client';
 
 const Attending = () => {
   const [courses, setCourses] = useState(enrollmentSample);

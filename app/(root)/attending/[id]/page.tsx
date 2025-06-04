@@ -1,13 +1,13 @@
 'use client'
-
-import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import TitleCard from '@/components/TitleCard'
 import { sessionsSample } from '@/content/data'
 
+import Header from '@/components/Header'
+
 const AttendingCourse = () => {
-  const [sessions, setSessions] = useState(sessionsSample)
+  const sessions = sessionsSample;
 
   const router = useRouter()
 
@@ -34,13 +34,7 @@ const AttendingCourse = () => {
   return (
     <div className="w-full min-h-screen flex justify-center">
       <div className="min-h-screen flex flex-col items-center justify-start w-full max-w-md gap-10 mb-10">
-        <div className="w-full p-8">
-          <div className="flex gap-2 items-center justify-center bg-myred text-white font-medium text-lg px-20 py-5 rounded-full cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]">
-            <img src="/create.svg" alt="Create" className="w-8 h-8" />
-            <p className="underline">{getCourseName()}</p>
-          </div>
-        </div>
-
+        <Header title={getCourseName()} onBack={() => router.back()} />
         <div className="flex flex-col w-full px-8 gap-6">
           {sessions.map((session) => (
             <TitleCard
