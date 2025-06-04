@@ -105,10 +105,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
                       <Input
                         placeholder="Name"
                         {...field}
-                        className="h-10 px-3 text-sm border rounded-md w-full py-5"
+                        className="h-10 px-3 text-sm border rounded-md w-full py-5 text-white"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs min-h-[16px]" />
+                    <FormMessage className="text-xs min-h-[16px] text-white" />
                   </FormItem>
                 )}
               />
@@ -123,10 +123,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
                     <Input
                       placeholder="Email"
                       {...field}
-                      className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5"
+                      className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5 text-white"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs min-h-[16px]" />
+                  <FormMessage className="text-xs min-h-[16px] text-white" />
                 </FormItem>
               )}
             />
@@ -141,10 +141,10 @@ const AuthForm = ({ type }: { type: FormType }) => {
                       type="password"
                       placeholder="Password"
                       {...field}
-                      className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5"
+                      className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5 text-white"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs min-h-[16px]" />
+                  <FormMessage className="text-xs min-h-[16px] text-white" />
                 </FormItem>
               )}
             />
