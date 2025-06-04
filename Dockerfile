@@ -3,6 +3,10 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
+# Set the environment variable for the backend API URL for the BUILD stage.
+# This ensures it's available when 'npm run build' executes and next.config.ts is processed.
+ENV NEXT_PUBLIC_BACKEND_URL=http://backend:5000
+
 # Copy package.json and yarn.lock/package-lock.json first to leverage Docker cache
 COPY package.json yarn.lock* package-lock.json* ./
 RUN npm install --frozen-lockfile || yarn install --frozen-lockfile
@@ -27,8 +31,8 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 
-# Set the environment variable for the backend API URL
-# This is crucial for your frontend to know where the backend is
+# Set the environment variable for the backend API URL for the RUN stage.
+# This ensures it's available when the Next.js server actually runs.
 ENV NEXT_PUBLIC_BACKEND_URL=http://backend:5000
 
 EXPOSE 3000

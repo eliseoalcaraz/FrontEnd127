@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormField,
+  FormField, // Ensure this is correctly imported
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
@@ -19,17 +19,23 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
+// Ensure FormType is defined, e.g., globally or in types/index.d.ts
+// For this example, let's define it here if it's not global
+type FormType = "sign-in" | "sign-up";
+
 const authFormSchema = (type: FormType) => {
   return z.object({
-    name: type === "sign-up" ? z.string().min(3) : z.string().optional(),
-    email: z.string().email(),
-    password: z.string().min(3),
+    name:
+      type === "sign-up"
+        ? z.string().min(3, "Name must be at least 3 characters.")
+        : z.string().optional(),
+    email: z.string().email("Invalid email address."),
+    password: z.string().min(3, "Password must be at least 3 characters."),
   });
 };
 
 const AuthForm = ({ type }: { type: FormType }) => {
   const router = useRouter();
-
   const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -40,22 +46,41 @@ const AuthForm = ({ type }: { type: FormType }) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      if (type === "sign-up") {
-        toast.success("Account created successfully");
-        // Use the 'values' parameter here, e.g., send to API
-        console.log("Sign Up Data:", values); // FIX: Using 'values' parameter
+      const endpoint = type === "sign-up" ? "/signup" : "/signin";
+      const apiUrl = `/api${endpoint}`; // Using the proxy in next.config.ts
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(
+          data.message ||
+            (type === "sign-up"
+              ? "Account created successfully!"
+              : "Logged in successfully!"),
+        );
+        console.log("API Response:", data);
         router.push("/home");
       } else {
-        toast.success("Log in successfully.");
-        // Use the 'values' parameter here, e.g., send to API
-        console.log("Log In Data:", values); // FIX: Using 'values' parameter and corrected typo
-        router.push("/home");
+        toast.error(data.error || "An error occurred.");
+        console.error("API Error:", data.error);
       }
-    } catch (error) {
-      console.log(error);
-      toast.error(`There was an error: ${error}`);
+    } catch (error: unknown) {
+      // FIX: Changed 'any' to 'unknown'
+      console.error("Network or unexpected error:", error);
+      // FIX: Type guard for 'error.message'
+      toast.error(
+        `There was an error: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   }
 
@@ -74,7 +99,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {!isSignIn && (
-              <FormField
+              <FormField // This should now be correctly recognized
                 control={form.control}
                 name="name"
                 render={({ field }) => (
@@ -92,7 +117,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               />
             )}
 
-            <FormField
+            <FormField // This should now be correctly recognized
               control={form.control}
               name="email"
               render={({ field }) => (
@@ -109,7 +134,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               )}
             />
 
-            <FormField
+            <FormField // This should now be correctly recognized
               control={form.control}
               name="password"
               render={({ field }) => (
@@ -138,7 +163,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
         </Form>
 
         <p className="text-center text-sm text-white mt-4 mb-8">
-          {isSignIn ? "Don't" : "Already"} have an account?{"  "}
+          {isSignIn ? "Don't" : "Already"} have an account?{" "}
           <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
             <span className="font-bold cursor-pointer text-[#4a915f]">
               {isSignIn ? "Sign up" : "Login"}
