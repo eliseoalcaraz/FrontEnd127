@@ -7,7 +7,7 @@ import { useEffect, useState } from "react" //for the email display
 const Home = () => {
 
   const router = useRouter();
-  const [email, setEmail] = useState(''); 
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     // get the email from localStorage
@@ -18,7 +18,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start w-full gap-10 pt-10">
+    <div className="min-h-screen flex flex-col items-center justify-start w-full pt-10 mx-2">
       {/* Email Button at the top */}
       <div className="mb-60">
         <Button className="bg-myred text-white font-medium text-lg px-20 py-8 rounded-full cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]" onClick={() => router.push('/profile')}>

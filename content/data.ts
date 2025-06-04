@@ -1,9 +1,293 @@
+// @/content/data.ts
+export const enrollmentSample = [
+  {
+    "enrollment_id": 1,
+    "course_id": 102,
+    "name": "Web Development Basics",
+    "join_code": "WEBDEV202",
+    "host_id": 2,
+    "host_name": "Jane Doe",
+    "enrolled_at": 1701388800
+  },
+  {
+    "enrollment_id": 2,
+    "course_id": 101,
+    "name": "Introduction to Python",
+    "join_code": "PYTHON101",
+    "host_id": 1,
+    "host_name": "John Doe",
+    "enrolled_at": 1702080000
+  },
+  {
+    "enrollment_id": 3,
+    "course_id": 104,
+    "name": "Database Management Systems",
+    "join_code": "DBMS404",
+    "host_id": 4,
+    "host_name": "Bob Johnson",
+    "enrolled_at": 1703030400
+  },
+  {
+    "enrollment_id": 4,
+    "course_id": 103,
+    "name": "Data Structures & Algorithms",
+    "join_code": "DSALGO303",
+    "host_id": 3,
+    "host_name": "Alice Smith",
+    "enrolled_at": 1704240000
+  },
+  {
+    "enrollment_id": 5,
+    "course_id": 107,
+    "name": "Artificial Intelligence",
+    "join_code": "AI707",
+    "host_id": 1,
+    "host_name": "John Doe",
+    "enrolled_at": 1705622400
+  },
+  {
+    "enrollment_id": 6,
+    "course_id": 105,
+    "name": "Mobile App Development",
+    "join_code": "MOBILEAPP505",
+    "host_id": 5,
+    "host_name": "Charlie Brown",
+    "enrolled_at": 1706832000
+  },
+  {
+    "enrollment_id": 7,
+    "course_id": 109,
+    "name": "Game Development with Unity",
+    "join_code": "UNITY909",
+    "host_id": 7,
+    "host_name": "Eve Adams",
+    "enrolled_at": 1708128000
+  },
+  {
+    "enrollment_id": 8,
+    "course_id": 106,
+    "name": "Network Security",
+    "join_code": "NETSEC606",
+    "host_id": 6,
+    "host_name": "Diana Prince",
+    "enrolled_at": 1709424000
+  },
+  {
+    "enrollment_id": 9,
+    "course_id": 108,
+    "name": "Cloud Computing",
+    "join_code": "CLOUD808",
+    "host_id": 2,
+    "host_name": "Jane Doe",
+    "enrolled_at": 1710720000
+  },
+  {
+    "enrollment_id": 10,
+    "course_id": 110,
+    "name": "Cybersecurity Fundamentals",
+    "join_code": "CYBER1010",
+    "host_id": 8,
+    "host_name": "Frank White",
+    "enrolled_at": 1712016000
+  }
+]
+
+
+
+export const sessionsSample =
+ [
+  {
+    "session_id": 1,
+    "course_id": 101,
+    "start_time": 1730438400,
+    "end_time": 1730442000
+  },
+  {
+    "session_id": 2,
+    "course_id": 102,
+    "start_time": 1730524800,
+    "end_time": 1730528400
+  },
+  {
+    "session_id": 3,
+    "course_id": 103,
+    "start_time": 1730611200,
+    "end_time": 1730614800
+  },
+  {
+    "session_id": 4,
+    "course_id": 104,
+    "start_time": 1730697600,
+    "end_time": 1730701200
+  },
+  {
+    "session_id": 5,
+    "course_id": 105,
+    "start_time": 1730784000,
+    "end_time": 1730787600
+  },
+  {
+    "session_id": 6,
+    "course_id": 106,
+    "start_time": 1730870400,
+    "end_time": 1730874000
+  },
+  {
+    "session_id": 7,
+    "course_id": 107,
+    "start_time": 1730956800,
+    "end_time": 1730960400
+  },
+  {
+    "session_id": 8,
+    "course_id": 108,
+    "start_time": 1731043200,
+    "end_time": 1731046800
+  },
+  {
+    "session_id": 9,
+    "course_id": 109,
+    "start_time": 1731129600,
+    "end_time": 1731133200
+  },
+  {
+    "session_id": 10,
+    "course_id": 110,
+    "start_time": 1731216000,
+    "end_time": 1731219600
+  }
+]
+
+
 export const courses = [
   { id: 1, title: "Company" },
   { id: 2, title: "Sport Org" },
   { id: 3, title: "Group Project" },
   { id: 4, title: "Company 2" },
 ];
+
+export const coursesSample = [
+  {
+    "course_id": 101,
+    "name": "Introduction to Python",
+    "join_code": "PYTHON101",
+    "host_id": 1,
+    "host_name": "John Doe",
+    "geolocation_latitude": 10.3157,
+    "geolocation_longitude": 123.8854,
+    "late_threshold_minutes": 15,
+    "present_threshold_minutes": 5,
+    "created_at": 1678886400
+  },
+  {
+    "course_id": 102,
+    "name": "Web Development Basics",
+    "join_code": "WEBDEV202",
+    "host_id": 2,
+    "host_name": "Jane Doe",
+    "geolocation_latitude": null,
+    "geolocation_longitude": null,
+    "late_threshold_minutes": 10,
+    "present_threshold_minutes": 5,
+    "created_at": 1678972800
+  },
+  {
+    "course_id": 103,
+    "name": "Data Structures & Algorithms",
+    "join_code": "DSALGO303",
+    "host_id": 3,
+    "host_name": "Alice Smith",
+    "geolocation_latitude": 10.3190,
+    "geolocation_longitude": 123.8900,
+    "late_threshold_minutes": 20,
+    "present_threshold_minutes": 7,
+    "created_at": 1679059200
+  },
+  {
+    "course_id": 104,
+    "name": "Database Management Systems",
+    "join_code": "DBMS404",
+    "host_id": 4,
+    "host_name": "Bob Johnson",
+    "geolocation_latitude": 10.2900,
+    "geolocation_longitude": 123.9000,
+    "late_threshold_minutes": 10,
+    "present_threshold_minutes": 3,
+    "created_at": 1679145600
+  },
+  {
+    "course_id": 105,
+    "name": "Mobile App Development",
+    "join_code": "MOBILEAPP505",
+    "host_id": 5,
+    "host_name": "Charlie Brown",
+    "geolocation_latitude": null,
+    "geolocation_longitude": null,
+    "late_threshold_minutes": 15,
+    "present_threshold_minutes": 5,
+    "created_at": 1679232000
+  },
+  {
+    "course_id": 106,
+    "name": "Network Security",
+    "join_code": "NETSEC606",
+    "host_id": 6,
+    "host_name": "Diana Prince",
+    "geolocation_latitude": 10.3200,
+    "geolocation_longitude": 123.8800,
+    "late_threshold_minutes": 25,
+    "present_threshold_minutes": 10,
+    "created_at": 1679318400
+  },
+  {
+    "course_id": 107,
+    "name": "Artificial Intelligence",
+    "join_code": "AI707",
+    "host_id": 1,
+    "host_name": "John Doe",
+    "geolocation_latitude": 10.3160,
+    "geolocation_longitude": 123.8860,
+    "late_threshold_minutes": 20,
+    "present_threshold_minutes": 8,
+    "created_at": 1679404800
+  },
+  {
+    "course_id": 108,
+    "name": "Cloud Computing",
+    "join_code": "CLOUD808",
+    "host_id": 2,
+    "host_name": "Jane Doe",
+    "geolocation_latitude": null,
+    "geolocation_longitude": null,
+    "late_threshold_minutes": 10,
+    "present_threshold_minutes": 4,
+    "created_at": 1679491200
+  },
+  {
+    "course_id": 109,
+    "name": "Game Development with Unity",
+    "join_code": "UNITY909",
+    "host_id": 7,
+    "host_name": "Eve Adams",
+    "geolocation_latitude": 10.3000,
+    "geolocation_longitude": 123.9100,
+    "late_threshold_minutes": 15,
+    "present_threshold_minutes": 6,
+    "created_at": 1679577600
+  },
+  {
+    "course_id": 110,
+    "name": "Cybersecurity Fundamentals",
+    "join_code": "CYBER1010",
+    "host_id": 8,
+    "host_name": "Frank White",
+    "geolocation_latitude": 10.3100,
+    "geolocation_longitude": 123.8950,
+    "late_threshold_minutes": 12,
+    "present_threshold_minutes": 5,
+    "created_at": 1679664000
+  }
+]
 
 
 export const sampleData = {
