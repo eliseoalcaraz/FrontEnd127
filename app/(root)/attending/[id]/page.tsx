@@ -8,6 +8,9 @@ import { useAuth } from "@/contexts/AuthContext"; // Assuming you have an AuthCo
 
 import TitleCard from "@/components/TitleCard";
 
+import JoinSessionForm from "@/components/JoinSessionForm";
+import CourseShow from "@/components/CourseShow";
+
 // Remove the mock data import
 // import { sessionsSample } from "@/content/data";
 
@@ -33,6 +36,7 @@ interface Session {
   // Add other session properties if your backend returns them
 }
 
+
 import Header from '@/components/Header'
 
 const AttendingCourse = () => {
@@ -46,6 +50,11 @@ const AttendingCourse = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [isLoadingCourse, setIsLoadingCourse] = useState(true);
   const [isLoadingSessions, setIsLoadingSessions] = useState(true);
+
+  const [showJoinForm, setShowJoinForm] = useState(false);
+  const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
+
+  const [showCourseInfo, setShowCourseInfo] = useState(false);
 
   // Function to fetch specific course details
   const fetchCourseDetails = useCallback(async () => {
@@ -110,7 +119,16 @@ const AttendingCourse = () => {
   }, [fetchCourseDetails, fetchCourseSessions]); // Dependencies for useEffect
 
   const handleJoinSession = (id: number) => {
-    router.push(`/attending/sessions/${id}`);
+      setSelectedSessionId(id);
+    setShowJoinForm(true);
+  };
+
+  const handleFormSubmit = (data: { number1: number; number2: number; photo: File | null }) => {
+    console.log("Joining with:", data);
+
+    if (selectedSessionId !== null) {
+      router.push(`/attending/sessions/${selectedSessionId}`);
+    }
   };
 
   const getDateSession = (start_time: number) => {
@@ -157,7 +175,7 @@ const AttendingCourse = () => {
     <div className="w-full min-h-screen flex justify-center">
       <div className="min-h-screen flex flex-col items-center justify-start w-full max-w-md gap-10 mb-10">
         <div className="w-full p-8">
-          <div className="flex gap-2 items-center justify-center bg-myred text-white font-medium text-lg px-20 py-5 rounded-full cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]">
+          <div onClick={() => setShowCourseInfo(true)} className="flex gap-2 items-center justify-center bg-myred text-white font-medium text-lg px-20 py-5 rounded-full cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]">
             <img src="/create.svg" alt="Course" className="w-8 h-8" />
             <p className="underline">{course.name}</p>{" "}
             {/* Display actual course name */}
@@ -179,6 +197,24 @@ const AttendingCourse = () => {
             ))
           )}
         </div>
+          {showCourseInfo && (
+            <CourseShow
+              course={course}
+              onCancel={() => setShowCourseInfo(false)}
+              onUnenroll={() => {
+                toast.success("Unenrolled from course!");
+                setShowCourseInfo(false);
+                router.push("/attending");
+              }}
+            />
+          )}
+          {showJoinForm && (
+            <JoinSessionForm
+              onClose={() => setShowJoinForm(false)}
+              onJoin={handleFormSubmit}
+            />
+          )}
+
       </div>
     </div>
   );

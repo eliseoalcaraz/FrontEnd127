@@ -2,14 +2,18 @@
 
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
+import UpdateProfileForm from "@/components/UpdateProfile";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
 
 const Profile = () => {
   const router = useRouter();
 
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+
+  const [updateDetails, setUpdateDetails] = useState<boolean>(false);
 
   const handleBack = () => {
     console.log("Back button clicked in Profile component!");
@@ -74,7 +78,7 @@ const Profile = () => {
         <div className="flex flex-col gap-4 w-full max-w-md">
           <Button
             className="bg-myred text-white font-semibold py-5 w-full rounded-xl"
-            onClick={() => router.push("/profile/update")}
+            onClick={() => setUpdateDetails(true)}
           >
             Update Details
           </Button>
@@ -90,14 +94,22 @@ const Profile = () => {
 
         <div className="max-w-md w-full mt-auto mx-3">
           <Button
-            className="bg-myred w-full py-10 rounded-xl font-semibold hover:bg-red-800 text-lg"
+            className="bg-myred w-full py-8 rounded-xl font-semibold hover:bg-red-800 text-lg"
             onClick={handleLogout}
           >
             Log Out
           </Button>
         </div>
       </main>
-
+      {updateDetails &&
+      <UpdateProfileForm
+        onClose={() => setUpdateDetails(false)}
+        onUpdate={({ name, email }) => {
+          console.log('Updated name:', name)
+          console.log('Updated email:', email)
+        }}
+      />
+      }
       {/* Logout Button at Bottom */}
 
     </div>
