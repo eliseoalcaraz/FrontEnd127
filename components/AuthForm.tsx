@@ -12,12 +12,13 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
 
 import { Input } from "@/components/ui/input";
 
 import Link from "next/link";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+//import { useRouter } from "next/navigation";
 
 // Ensure FormType is defined, e.g., globally or in types/index.d.ts
 // For this example, let's define it here if it's not global
@@ -35,7 +36,8 @@ const authFormSchema = (type: FormType) => {
 };
 
 const AuthForm = ({ type }: { type: FormType }) => {
-  const router = useRouter();
+  //const router = useRouter();
+  const { login } = useAuth(); // Get the login function from context
   const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,14 +64,9 @@ const AuthForm = ({ type }: { type: FormType }) => {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(
-          data.message ||
-            (type === "sign-up"
-              ? "Account created successfully!"
-              : "Logged in successfully!"),
-        );
-        console.log("API Response:", data);
-        router.push("/home");
+        // Call the login function from AuthContext to update global state
+        login({ id: data.user_id, name: data.name, email: data.email }); // Pass relevant user data
+        // The router.push('/home') is now handled by the AuthLayout via context update
       } else {
         toast.error(data.error || "An error occurred.");
         console.error("API Error:", data.error);
