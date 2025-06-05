@@ -7,7 +7,7 @@ interface CardProps {
     onClick?: () => void;
 }
 
-const Card = ({ title, onClick }: CardProps) => {
+const CalendarCard = ({ title, onClick }: CardProps) => {
     return (
         <div
             className="border-solid w-full h-30 bg-[#ebebeb] flex flex-col cursor-pointer rounded-sm"
@@ -21,4 +21,4 @@ const Card = ({ title, onClick }: CardProps) => {
     );
 };
 
-export default Card;
+export default CalendarCard;

@@ -7,6 +7,7 @@ import { toast } from "sonner"; // For notifications
 import { useAuth } from "@/contexts/AuthContext"; // Assuming you have an AuthContext
 
 import TitleCard from "@/components/TitleCard";
+import CalendarCard from "@/components/CalendarCard";
 
 import JoinSessionForm from "@/components/JoinSessionForm";
 import CourseShow from "@/components/CourseShow";
@@ -172,24 +173,58 @@ const AttendingCourse = () => {
   }
 
   return (
-    <div className="w-full min-h-screen flex justify-center">
-      <div className="min-h-screen flex flex-col items-center justify-start w-full max-w-md gap-10 mb-10">
-        <div className="w-full p-8">
-          <div onClick={() => setShowCourseInfo(true)} className="flex gap-2 items-center justify-center bg-myred text-white font-medium text-lg px-20 py-5 rounded-full cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]">
-            <img src="/create.svg" alt="Course" className="w-8 h-8" />
-            <p className="underline">{course.name}</p>{" "}
-            {/* Display actual course name */}
-          </div>
-        </div>
+   <div className="w-full min-h-screen flex justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-start w-full gap-10 mb-10">
+        {/* Header */}
+        <Header title="Course Details" onClick={() => router.push('/attending')} />
 
-        <div className="flex flex-col w-full px-8 gap-6">
+        {/* Course Info Box */}
+        <div className="w-full max-w-xl bg-white border rounded-xl shadow p-6 flex flex-col gap-4 relative">
+          <button
+            className="absolute top-4 right-4 bg-myred text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition"
+            onClick={() => setShowCourseInfo(true)}
+          >
+            Unenroll
+          </button>
+
+          <div>
+            <span className="block text-xs text-gray-500 font-semibold">Course Name</span>
+            <span className="block text-lg font-bold text-myred">{course.name}</span>
+          </div>
+
+          <div>
+            <span className="block text-xs text-gray-500 font-semibold">Join Code</span>
+            <span className="block text-base font-mono">{course.join_code}</span>
+          </div>
+
+          <div className="flex gap-6">
+            <div>
+              <span className="block text-xs text-gray-500 font-semibold">Late Threshold (min)</span>
+              <span className="block text-base">{course.late_threshold_minutes}</span>
+            </div>
+            <div>
+              <span className="block text-xs text-gray-500 font-semibold">Present Threshold (min)</span>
+              <span className="block text-base">{course.present_threshold_minutes}</span>
+            </div>
+          </div>
+
+          {(course.geolocation_latitude !== null && course.geolocation_longitude !== null) && (
+            <div>
+              <span className="block text-xs text-gray-500 font-semibold">Geolocation</span>
+              <span className="block text-base">
+                {course.geolocation_latitude}, {course.geolocation_longitude}
+              </span>
+            </div>
+          )}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 w-full px-8 gap-6">
           {sessions.length === 0 ? (
             <p className="text-center text-gray-600">
               No sessions available for this course yet.
             </p>
           ) : (
             sessions.map((session) => (
-              <TitleCard
+              <CalendarCard
                 key={session.session_id}
                 title={getDateSession(session.start_time)}
                 onClick={() => handleJoinSession(session.session_id)}

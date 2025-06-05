@@ -32,37 +32,6 @@ export default function SimpleUnenrollModal({ course, onCancel, onUnenroll }: Si
           <h2 className="text-2xl font-extrabold text-gray-800 leading-tight">
             {course.name}
           </h2>
-          <p className="text-md text-gray-500 mt-1">Course ID: {course.course_id}</p>
-        </div>
-
-        {/* Details Section - Organized with subtle background */}
-        <div className="flex flex-col gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-          <div className="flex justify-between items-center text-gray-700">
-            <span className="font-semibold">Join Code:</span>
-            <span className="font-mono text-gray-800">{course.join_code}</span>
-          </div>
-
-          <div className="flex justify-between items-center text-gray-700">
-            <span className="font-semibold">Latitude:</span>
-            <span className="text-gray-800">{course.geolocation_latitude !== null ? course.geolocation_latitude : 'N/A'}</span>
-          </div>
-
-          <div className="flex justify-between items-center text-gray-700">
-            <span className="font-semibold">Longitude:</span>
-            <span className="text-gray-800">{course.geolocation_longitude !== null ? course.geolocation_longitude : 'N/A'}</span>
-          </div>
-
-          {/* Thresholds - Visually separated and emphasized */}
-          <div className="pt-3 border-t border-gray-100 mt-1"> {/* Subtle separator */}
-            <div className="flex justify-between items-center text-gray-700">
-              <span className="font-semibold">Present Threshold:</span>
-              <span className="font-bold text-green-600">{course.present_threshold_minutes} minutes</span>
-            </div>
-            <div className="flex justify-between items-center text-gray-700">
-              <span className="font-semibold">Late Threshold:</span>
-              <span className="font-bold text-orange-600">{course.late_threshold_minutes} minutes</span>
-            </div>
-          </div>
         </div>
 
         {/* Confirmation Message */}

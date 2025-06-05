@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import TitleCard from "@/components/TitleCard";
 import JoinCourse from "@/components/JoinCourse";
 import Header from "@/components/Header";
+import FolderCard from "@/components/FolderCard";
 
 interface CourseEnrollment {
   enrollment_id: number;
@@ -135,7 +136,7 @@ const Attending = () => {
             </p>
           ) : (
             courses.map((course) => (
-              <TitleCard
+              <FolderCard
                 key={course.enrollment_id}
                 title={course.name}
                 onClick={() => handleClickCourse(course.course_id)}
