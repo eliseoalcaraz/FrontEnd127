@@ -134,7 +134,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               letterSpacing: '3%'
             }}
           >
-            Welcome Back
+            {isSignIn ? "Welcome Back" : "Register"}
           </h2>
           <p 
             style={{
@@ -145,7 +145,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
               color: 'rgba(187, 187, 187, 1)'
             }}
           >
-            Log in to your account
+            {isSignIn ? "Login to your account" : "Create your account"}
           </p>
         </div>
 
