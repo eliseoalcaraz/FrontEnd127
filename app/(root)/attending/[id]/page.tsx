@@ -429,7 +429,7 @@ const AttendingCourse = () => {
             course={course}
             onCancel={() => setShowCourseInfo(false)}
             onUnenroll={() => {
-              handleUnenroll(courseId);
+              handleUnenroll(courseId ?? course.course_id);
               toast.success("Unenrolled from course!");
               setShowCourseInfo(false);
               router.push("/attending");

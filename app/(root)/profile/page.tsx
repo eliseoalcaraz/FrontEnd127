@@ -175,7 +175,7 @@ const Profile = () => {
         if (response.ok) {
           toast.success(data.message || "Account deleted successfully!");
           logout(); // Log out the user from AuthContext
-          router.push("/sign-in"); // Redirect to login page
+          router.push("/"); // Redirect to login page
         } else {
           toast.error(
             data.error || data.message || "Failed to delete account.",
@@ -281,4 +281,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
