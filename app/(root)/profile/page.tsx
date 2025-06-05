@@ -217,7 +217,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start w-full pt-10 mx-2">
+    <div className="min-h-screen flex flex-col items-center justify-start w-full">
       <Header title="Profile" onClick={() => router.back()} />
 
       <main className="flex-1 flex flex-col items-center justify-start py-8 px-4 gap-6">
@@ -233,14 +233,14 @@ const Profile = () => {
         {/* Action Buttons */}
         <section className="w-full max-w-md flex flex-col gap-4 px-3">
           <Button
-            className="bg-myred w-full py-8 rounded-full font-normal hover:bg-red-800 text-lg"
+            className="bg-myred w-full py-8 rounded-2xl font-normal hover:bg-red-800 text-md px-10"
             onClick={() => setShowUpdateDetailsForm(true)}
           >
             Update Details
           </Button>
 
           <Button
-            className="bg-red-500 w-full py-8 rounded-full font-normal hover:bg-red-600 text-lg"
+            className="bg-red-500 w-full py-8 rounded-2xl font-normal hover:bg-red-600 text-md"
             onClick={() => setShowDeleteUserForm(true)}
           >
             Delete User
@@ -250,7 +250,7 @@ const Profile = () => {
         {/* Logout Button */}
         <section className="max-w-md w-full mt-auto mx-3">
           <Button
-            className="bg-gray-400 w-full py-8 rounded-full font-normal hover:bg-gray-500 text-lg"
+            className="bg-myred w-full py-8 rounded-full font-normal hover:bg-red-800"
             onClick={handleLogout}
           >
             Log Out
