@@ -1,7 +1,6 @@
-// components/SessionManagementForm.tsx
-'use client';
+"use client";
 
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface Session {
@@ -14,54 +13,33 @@ interface Session {
 interface SessionManagementFormProps {
   session: Session;
   onClose: () => void;
-  onUpdate: (sessionId: number, newEndTime: number) => void;
-  onDelete: (sessionId: number) => void;
+  onUpdate: (updatedSession: Session) => void;
+  onDelete: (deletedSessionId: number) => void;
 }
 
-const SessionManagementForm: React.FC<SessionManagementFormProps> = ({
+export default function SessionManagementForm({
   session,
   onClose,
   onUpdate,
   onDelete,
-}) => {
-  const [editedEndTime, setEditedEndTime] = useState<string>("");
+}: SessionManagementFormProps) {
+  // Convert Unix timestamps to local datetime strings for input fields
+  const originalStart = new Date(session.start_time).toLocaleDateString()
+  const originalEnd = new Date(session.end_time).toLocaleDateString()
 
-  useEffect(() => {
-    // Convert UNIX timestamp (seconds) to a Date object, then to ISO string for datetime-local input
-    if (session.end_time) {
-      const endDate = new Date(session.end_time * 1000);
-      setEditedEndTime(endDate.toISOString().slice(0, 16)); // Format to "YYYY-MM-DDTHH:mm"
-    } else {
-      setEditedEndTime("");
-    }
-  }, [session.end_time]);
+  const [startTime, setStartTime] = useState(originalStart);
+  const [endTime, setEndTime] = useState(originalEnd);
+  const [loading, setLoading] = useState(false);
 
-  const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditedEndTime(e.target.value);
-  };
+  // Determine if there are any changes from the original session times
+  const hasChanges = startTime !== originalStart || endTime !== originalEnd;
 
-  const handleSubmitUpdate = async () => {
-    if (!editedEndTime) {
-      toast.error("End time cannot be empty.");
-      return;
-    }
-    const newEndTimeTimestamp = Math.floor(new Date(editedEndTime).getTime() / 1000);
-    // Ensure new end time is after start time
-    if (newEndTimeTimestamp <= session.start_time) {
-      toast.error("End time must be after the session's start time.");
-      return;
-    }
-    onUpdate(session.session_id, newEndTimeTimestamp);
-  };
-
-  const handleDeleteClick = () => {
-    if (window.confirm("Are you sure you want to delete this session?")) {
-      onDelete(session.session_id);
-    }
-  };
-
-  const getFormattedDateTime = (timestamp: number) => {
-    const date = new Date(timestamp * 1000);
+  /**
+   * Formats a Unix timestamp into a human-readable date and time string.
+   * @param unix The Unix timestamp to format.
+   * @returns Formatted date and time string.
+   */
+  const formatTime = (unix: number) => {
     const options: Intl.DateTimeFormatOptions = {
       month: "long",
       day: "numeric",
@@ -70,53 +48,141 @@ const SessionManagementForm: React.FC<SessionManagementFormProps> = ({
       minute: "2-digit",
       hour12: true,
     };
-    return date.toLocaleDateString("en-US", options);
+    const date = new Date(unix * 1000); // Convert seconds to milliseconds
+    return date.toLocaleTimeString("en-US", options);
   };
 
-  return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm mx-auto">
-        <h2 className="text-2xl font-bold mb-4 text-center">Manage Session</h2>
-        <p className="text-gray-700 mb-2">
-          <span className="font-semibold">Start Time:</span>{" "}
-          {getFormattedDateTime(session.start_time)}
-        </p>
-        <div className="mb-4">
-          <label htmlFor="endTime" className="block text-gray-700 text-sm font-bold mb-2">
-            End Time:
-          </label>
-          <input
-            type="datetime-local"
-            id="endTime"
-            value={editedEndTime}
-            onChange={handleEndTimeChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-        </div>
 
-        <div className="flex justify-between gap-4 mt-6">
-          <button
-            onClick={handleSubmitUpdate}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-1"
-          >
-            Update
-          </button>
-          <button
-            onClick={handleDeleteClick}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-1"
-          >
-            Delete
-          </button>
-          <button
-            onClick={onClose}
-            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-1"
-          >
-            Cancel
-          </button>
-        </div>
+  /**
+   * Handles the update action for the session.
+   * Converts local datetime strings back to Unix timestamps before sending to the API.
+   */
+  const handleUpdate = async () => {
+    const updatedStart = new Date(startTime).getTime();
+    const updatedEnd = new Date(endTime).getTime();
+
+    // Validate the input times
+    if (isNaN(updatedStart) || isNaN(updatedEnd)) {
+      toast.error("Please enter valid start and end times.");
+      return;
+    }
+
+    // Basic validation for end time not being before start time
+    if (updatedEnd < updatedStart) {
+      toast.error("End time cannot be before start time.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/sessions/${session.session_id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        // Convert milliseconds back to seconds for Unix timestamp
+        body: JSON.stringify({
+          start_time: Math.floor(updatedStart / 1000),
+          end_time: Math.floor(updatedEnd / 1000),
+        }),
+      });
+
+      if (!res.ok) {
+        // Attempt to parse error message from response body
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to update session");
+      }
+
+      const updated = await res.json();
+      toast.success("Session updated successfully");
+      onUpdate(updated); // Call the onUpdate prop with the new session data
+      onClose(); // Close the form after successful update
+    } catch (err: any) {
+      toast.error(`Error updating session: ${err.message || err}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /**
+   * Handles the delete action for the session.
+   * Confirms with the user before proceeding with deletion.
+   */
+  const handleDelete = async () => {
+    const confirmDelete = confirm("Are you sure you want to delete this session?");
+    if (!confirmDelete) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/sessions/${session.session_id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to delete session");
+      }
+
+      toast.success("Session deleted successfully");
+      onDelete(session.session_id); // Call the onDelete prop with the deleted session ID
+      onClose(); // Close the form after successful deletion
+    } catch (err: any) {
+      toast.error(`Error deleting session: ${err.message || err}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return(
+    <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md relative">
+      <button
+        onClick={onClose}
+        className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
+        disabled={loading} // Disable close button during loading
+      >
+        ✕
+      </button>
+
+      <h2 className="text-xl font-bold mb-4 text-center">Edit Session</h2>
+
+      {/* Display current session times for reference */}
+      <div className="mb-4 text-sm text-gray-600 text-center">
+        <p>Current Start: {formatTime(session.start_time)}</p>
+        <p>Current End: {formatTime(session.end_time)}</p>
+      </div>
+
+      <div className="mb-6">
+        <label htmlFor="end-time" className="block text-sm font-semibold mb-1">End Time</label>
+        <input
+          id="end-time"
+          type="datetime-local"
+          className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200 focus:border-blue-500"
+          value={endTime}
+          onChange={(e) => setEndTime(e.target.value)}
+          disabled={loading}
+        />
+      </div>
+
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+        <button
+          className="bg-myred text-white px-4 py-2 rounded hover:bg-red-700 transition text-sm font-medium"
+          onClick={handleDelete}
+          disabled={loading}
+        >
+          {loading ? "Deleting..." : "Delete Session"}
+        </button>
+
+        <button
+          className={`px-4 py-2 rounded transition text-sm font-medium
+            ${hasChanges && !loading
+              ? "bg-blue-800 text-white hover:bg-blue-700"
+              : "bg-gray-300 text-gray-600 cursor-not-allowed"
+            }`
+          }
+          onClick={handleUpdate}
+          disabled={!hasChanges || loading}
+        >
+          {loading ? "Saving..." : "Save Changes"}
+        </button>
       </div>
     </div>
   );
-};
-
-export default SessionManagementForm;
+}
