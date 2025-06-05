@@ -29,6 +29,11 @@ const breeSerif = Bree_Serif({
 export const metadata: Metadata = {
   title: "Attends",
   description: "Check your attendees",
+  icons: {
+    icon: '/home-logo.png',
+    shortcut: '/home-logo.png',
+    apple: '/home-logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -38,6 +43,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/home-logo.png" sizes="any" />
+        <link rel="icon" type="image/png" href="/home-logo.png" />
+        <link rel="apple-touch-icon" href="/home-logo.png" />
+        <meta name="theme-color" content="#8B0000" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${karma.variable} ${breeSerif.variable} antialiased bg-back`}
       >
