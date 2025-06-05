@@ -23,7 +23,7 @@ const JoinSessionForm: React.FC<JoinSessionFormProps> = ({ onClose, onJoin }) =>
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/30 bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm flex flex-col gap-4">
-        <h2 className="text-xl font-bold text-center">Join Session</h2>
+        <h2 className="text-xl font-bold text-center text-myred">Join New Course</h2>
 
         <div className="flex flex-col gap-1">
           <label htmlFor="joinCode" className="text-sm font-medium text-gray-700">

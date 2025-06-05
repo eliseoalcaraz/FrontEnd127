@@ -103,41 +103,22 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
         <h2 className="text-xl font-semibold mb-4 text-center">New Course</h2>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {[
-              { name: "name", type: "text", placeholder: "Course name" },
-              { name: "join_code", type: "text", placeholder: "Join code" },
-              {
-                name: "late_threshold_minutes",
-                type: "number",
-                placeholder: "Late threshold (minutes)",
-              },
-              {
-                name: "present_threshold_minutes",
-                type: "number",
-                placeholder: "Present threshold (minutes)",
-              },
-              {
-                name: "geolocation_latitude",
-                type: "number",
-                placeholder: "Latitude (e.g. 10.3157)",
-              },
-              {
-                name: "geolocation_longitude",
-                type: "number",
-                placeholder: "Longitude (e.g. 123.8854)",
-              },
-            ].map((field) => (
+
+            {/* Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Course Name
+              </label>
               <FormField
-                key={field.name}
                 control={form.control}
-                name={field.name as keyof z.infer<typeof courseFormSchema>}
-                render={({ field: f }) => (
+                name="name"
+                render={({ field }) => (
                   <FormItem>
                     <FormControl>
                       <Input
-                        {...f}
-                        type={field.type}
-                        placeholder={field.placeholder}
+                        {...field}
+                        type="text"
+                        placeholder="Course name"
                         className="py-5 px-4 text-sm"
                       />
                     </FormControl>
@@ -145,7 +126,118 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
                   </FormItem>
                 )}
               />
-            ))}
+            </div>
+
+            {/* Join Code */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Join Code
+              </label>
+              <FormField
+                control={form.control}
+                name="join_code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Join code"
+                        className="py-5 px-4 text-sm"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs min-h-[16px]" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Thresholds in one row */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Thresholds
+              </label>
+              <div className="flex gap-2">
+                <FormField
+                  control={form.control}
+                  name="late_threshold_minutes"
+                  render={({ field }) => (
+                    <FormItem className="w-1/2">
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          placeholder="Late threshold (min)"
+                          className="py-5 px-4 text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs min-h-[16px]" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="present_threshold_minutes"
+                  render={({ field }) => (
+                    <FormItem className="w-1/2">
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          placeholder="Present threshold (min)"
+                          className="py-5 px-4 text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs min-h-[16px]" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Geolocations in one row */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Geolocation
+              </label>
+              <div className="flex gap-2">
+                <FormField
+                  control={form.control}
+                  name="geolocation_latitude"
+                  render={({ field }) => (
+                    <FormItem className="w-1/2">
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          placeholder="Latitude (e.g. 10.3157)"
+                          className="py-5 px-4 text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs min-h-[16px]" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="geolocation_longitude"
+                  render={({ field }) => (
+                    <FormItem className="w-1/2">
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          placeholder="Longitude (e.g. 123.8854)"
+                          className="py-5 px-4 text-sm"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs min-h-[16px]" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
             <div className="flex justify-end gap-2">
               <Button
                 type="button"

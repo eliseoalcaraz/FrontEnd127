@@ -7,6 +7,9 @@ import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
 
 import CourseForm from "@/components/CourseForm";
 import TitleCard from "@/components/TitleCard";
+import Header from "@/components/Header"; // Import your headers component
+import CalendarCard from "@/components/CalendarCard"
+import FolderCard from "@/components/FolderCard";
 
 // Remove the mock data import
 // import { coursesSample } from "@/content/data";
@@ -108,23 +111,17 @@ const Hosting = () => {
 
   return (
     <div className="w-full min-h-screen flex justify-center">
-      <div className="min-h-screen flex flex-col items-center justify-start w-full max-w-md gap-10 mb-10">
-        <div className="w-full p-8">
-          <div className="flex gap-2 items-center justify-center bg-myred text-white font-medium text-lg px-20 py-5 rounded-full cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]">
-            <img src="/create.svg" alt="Create" className="w-8 h-8" />
-            <p className="underline">Hosting</p>
-          </div>
-        </div>
+      <div className="min-h-screen flex flex-col items-center justify-start w-full gap-10 mb-10">
+        <Header title="Hosting" onClick={() => router.push("/home")} />
 
-        <div className="flex flex-col w-full px-8 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 w-full w-max-3xl px-4 md:px-8 gap-2 mt-10">
           {courses.length === 0 ? (
-            <p className="text-center text-gray-600">
-              You are not hosting any courses yet. Click the &apos;+&apos;
-              button to create one!
+            <p className="text-center text-gray-600 col-span-full">
+              You are not hosting any courses yet. Click the &apos;+&apos; button to create one!
             </p>
           ) : (
             courses.map((course) => (
-              <TitleCard
+              <FolderCard
                 key={course.course_id}
                 title={course.name}
                 onClick={() => handleClickCourse(course.course_id)}

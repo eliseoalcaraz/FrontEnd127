@@ -218,7 +218,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ onClose, onUpdate, onCreate, on
             {isUpdateMode && onDelete && ( // Only show delete in update mode if onDelete is provided
               <button
                 onClick={handleDelete}
-                className="px-4 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors shadow-md"
+                className="px-4 py-3 bg-myred text-white font-semibold rounded-lg hover:bg-red-700 transition-colors shadow-md"
               >
                 Delete
               </button>
