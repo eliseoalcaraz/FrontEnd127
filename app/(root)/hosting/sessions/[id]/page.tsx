@@ -1,13 +1,12 @@
 // frontend/app/(root)/[hosting_or_attending]/sessions/[id]/page.tsx
 "use client";
 
-import { useParams, useSearchParams } from "next/navigation"; // Import useParams to get the session ID
+import { useParams } from "next/navigation"; // Import useParams to get the session ID
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 
 import Header from "@/components/Header";
 import StatButton from "@/components/StatButton";
-import SessionManagementForm from "@/components/SessionManagementForm";
 
 // Define the expected structure of a single attendance record from the new API
 interface RawAttendanceRecord {
@@ -56,7 +55,6 @@ export default function AttendanceSummaryPage() {
   const params = useParams();
   const sessionId = params.id ? parseInt(params.id as string, 10) : null;
 
-
   const [attendanceSummary, setAttendanceSummary] =
     useState<AttendanceSummaryData | null>(null);
   const [rawAttendanceRecords, setRawAttendanceRecords] = useState<
@@ -65,8 +63,6 @@ export default function AttendanceSummaryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [showSessionForm, setShowSessionForm] = useState(false);
-
 
   const fetchAttendanceSummary = useCallback(async () => {
     if (sessionId === null || isNaN(sessionId)) {
@@ -83,16 +79,16 @@ export default function AttendanceSummaryPage() {
         | RawAttendanceSummaryResponse
         | { message: string; error?: string } = await response.json();
 
-       const res  = await fetch(`/api/sessions/${sessionId}`)
+      const res = await fetch(`/api/sessions/${sessionId}`);
       const data2 = await res.json();
 
-      if(res.ok)
-      setSession({
-        session_id: data2.session_id,
-        course_id: data2.course_id,
-        start_time: data2.start_time,
-        end_time: data2.end_time,
-      })
+      if (res.ok)
+        setSession({
+          session_id: data2.session_id,
+          course_id: data2.course_id,
+          start_time: data2.start_time,
+          end_time: data2.end_time,
+        });
 
       if (response.ok) {
         // Process the raw attendance data into the format needed for StatButtons
@@ -231,10 +227,10 @@ export default function AttendanceSummaryPage() {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
-    }
+    };
 
-    return time.toLocaleTimeString('en-US', options);
-  }
+    return time.toLocaleTimeString("en-US", options);
+  };
 
   if (loading) {
     return (
@@ -246,12 +242,12 @@ export default function AttendanceSummaryPage() {
 
   if (error) {
     return (
-          <div className="min-h-screen flex flex-col bg-white w-full">
-            <Header
-              title="Attendance Summary"
-              onClick={() => window.history.back()}
-            />
-            <div className="flex max-w-md self-center mb-7 relative">
+      <div className="min-h-screen flex flex-col bg-white w-full">
+        <Header
+          title="Attendance Summary"
+          onClick={() => window.history.back()}
+        />
+        <div className="flex max-w-md self-center mb-7 relative">
           <div className="mt-4 bg-white border rounded-xl shadow p-4 flex flex-col gap-3 px-20 w-full">
             <div>
               <span className="block text-xs text-gray-500 font-semibold">
@@ -278,163 +274,122 @@ export default function AttendanceSummaryPage() {
         <div className="flex-1 flex flex-col items-center justify-center text-red-500 p-4">
           <p>Error: {error}</p>
         </div>
-        {showSessionForm && session && (
-          <div className="fixed inset-0  bg-black/30 bg-opacity-50 flex items-center justify-center z-50">
-            <SessionManagementForm
-              session={session}
-              onClose={() => setShowSessionForm(false)}
-              onUpdate={(updatedSession) => {
-                setSession(updatedSession);
-                setShowSessionForm(false);
-                toast.success("Session updated successfully");
-              }}
-              onDelete={(deletedSessionId) => {
-                toast.success("Session deleted");
-                setShowSessionForm(false);
-                window.history.back(); // or navigate to course page
-              }}
-            />
-          </div>
-        )}
       </div>
     );
   }
 
   // If no attendance summary but no error, means no records found.
- return (
-  <div className="min-h-screen flex flex-col bg-white w-full">
-    <Header
-      title={attendanceSummary ? formattedDate : "Attendance Summary"}
-      onClick={() => window.history.back()}
-    />
-     <div className="flex max-w-md self-center mb-7 relative">
-      <button
-        className="absolute top-4 right-4 bg-myred text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition"
-        onClick={() => setShowSessionForm(true)} // or your edit handler
-      >
-        Edit
-      </button>
-      <div className="mt-4 bg-white border rounded-xl shadow p-4 flex flex-col gap-3 px-20 w-full">
-        <div>
-          <span className="block text-xs text-gray-500 font-semibold">
-            Session Start Time
-          </span>
-          <span className="block text-base">
-            {session?.start_time
-              ? formatUnixTime2(session.start_time)
-              : "No start time"}
-          </span>
-        </div>
-        <div>
-          <span className="block text-xs text-gray-500 font-semibold">
-            Session End Time
-          </span>
-          <span className="block text-base">
-            {session?.end_time
-              ? formatUnixTime2(session.end_time)
-              : "No end time"}
-          </span>
+  return (
+    <div className="min-h-screen flex flex-col bg-white w-full">
+      <Header
+        title={attendanceSummary ? formattedDate : "Attendance Summary"}
+        onClick={() => window.history.back()}
+      />
+      <div className="flex max-w-md self-center mb-7 relative">
+        <div className="mt-4 bg-white border rounded-xl shadow p-4 flex flex-col gap-3 px-20 w-full">
+          <div>
+            <span className="block text-xs text-gray-500 font-semibold">
+              Session Start Time
+            </span>
+            <span className="block text-base">
+              {session?.start_time
+                ? formatUnixTime2(session.start_time)
+                : "No start time"}
+            </span>
+          </div>
+          <div>
+            <span className="block text-xs text-gray-500 font-semibold">
+              Session End Time
+            </span>
+            <span className="block text-base">
+              {session?.end_time
+                ? formatUnixTime2(session.end_time)
+                : "No end time"}
+            </span>
+          </div>
         </div>
       </div>
 
-     {showSessionForm && session && (
-      <div className="fixed inset-0  bg-black/30 bg-opacity-50 flex items-center justify-center z-50">
-        <SessionManagementForm
-          session={session}
-          onClose={() => setShowSessionForm(false)}
-          onUpdate={(updatedSession) => {
-            setSession(updatedSession);
-            setShowSessionForm(false);
-            toast.success("Session updated successfully");
-          }}
-          onDelete={(deletedSessionId) => {
-            toast.success("Session deleted");
-            setShowSessionForm(false);
-            window.history.back(); // or navigate to course page
-          }}
-        />
-      </div>
-    )}
-    </div>
-
-
-    {!attendanceSummary ? (
-      <div className="flex-1 flex flex-col items-center justify-center p-4">
-        <p>No attendance summary available for this session.</p>
-      </div>
-    ) : (
-      <>
-        <div className="flex-1 flex flex-col items-center justify-center gap-4 px-4">
-          <StatButton
-            label="Present"
-            count={attendanceSummary.present.count}
-            names={attendanceSummary.present.names}
-          />
-          <StatButton
-            label="Absent"
-            count={attendanceSummary.absent.count}
-            names={attendanceSummary.absent.names}
-          />
-          <StatButton
-            label="Late"
-            count={attendanceSummary.late.count}
-            names={attendanceSummary.late.names}
-          />
+      {!attendanceSummary ? (
+        <div className="flex-1 flex flex-col items-center justify-center p-4">
+          <p>No attendance summary available for this session.</p>
         </div>
+      ) : (
+        <>
+          <div className="flex-1 flex flex-col items-center justify-center gap-4 px-4">
+            <StatButton
+              label="Present"
+              count={attendanceSummary.present.count}
+              names={attendanceSummary.present.names}
+            />
+            <StatButton
+              label="Absent"
+              count={attendanceSummary.absent.count}
+              names={attendanceSummary.absent.names}
+            />
+            <StatButton
+              label="Late"
+              count={attendanceSummary.late.count}
+              names={attendanceSummary.late.names}
+            />
+          </div>
 
-        <div className="p-4">
-          <p className="text-myred font-bold text-lg">
-            Total Attendees Recorded: {attendanceSummary.total_attendees_recorded}
-          </p>
-        </div>
+          <div className="p-4">
+            <p className="text-myred font-bold text-lg">
+              Total Attendees Recorded:{" "}
+              {attendanceSummary.total_attendees_recorded}
+            </p>
+          </div>
 
-        {rawAttendanceRecords.length > 0 && (
-          <div className="w-full px-4 mt-6 mb-10">
-            <h3 className="text-xl font-bold text-myred mb-4 text-center">
-              Individual Attendance Records
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {rawAttendanceRecords.map((record) => (
-                <div
-                  key={record.attendance_id}
-                  className="bg-gray-100 p-4 rounded-lg shadow-sm"
-                >
-                  <p className="font-semibold text-lg">{record.user_name}</p>
-                  <p className="text-sm text-gray-600">
-                    Email: {record.user_email}
-                  </p>
-                  <p className={`font-medium ${getStatusColor(record.status)}`}>
-                    Status: {record.status}
-                  </p>
-                  {record.joined_at && (
-                    <p className="text-xs text-gray-500">
-                      Joined: {formatTime(record.joined_at)}
+          {rawAttendanceRecords.length > 0 && (
+            <div className="w-full px-4 mt-6 mb-10">
+              <h3 className="text-xl font-bold text-myred mb-4 text-center">
+                Individual Attendance Records
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {rawAttendanceRecords.map((record) => (
+                  <div
+                    key={record.attendance_id}
+                    className="bg-gray-100 p-4 rounded-lg shadow-sm"
+                  >
+                    <p className="font-semibold text-lg">{record.user_name}</p>
+                    <p className="text-sm text-gray-600">
+                      Email: {record.user_email}
                     </p>
-                  )}
-                  {record.user_geolocation_latitude !== null &&
-                    record.user_geolocation_longitude !== null && (
+                    <p
+                      className={`font-medium ${getStatusColor(record.status)}`}
+                    >
+                      Status: {record.status}
+                    </p>
+                    {record.joined_at && (
                       <p className="text-xs text-gray-500">
-                        Location: ({record.user_geolocation_latitude},{" "}
-                        {record.user_geolocation_longitude})
+                        Joined: {formatTime(record.joined_at)}
                       </p>
                     )}
-                  {record.proof_base64 && (
-                    <div className="mt-2 flex flex-col items-center">
-                      <p className="text-xs text-gray-700">Proof:</p>
-                      <img
-                        src={`data:image/jpeg;base64,${record.proof_base64}`}
-                        alt="Proof of attendance"
-                        className="mt-1 w-40 h-auto object-contain border border-gray-300 rounded"
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
+                    {record.user_geolocation_latitude !== null &&
+                      record.user_geolocation_longitude !== null && (
+                        <p className="text-xs text-gray-500">
+                          Location: ({record.user_geolocation_latitude},{" "}
+                          {record.user_geolocation_longitude})
+                        </p>
+                      )}
+                    {record.proof_base64 && (
+                      <div className="mt-2 flex flex-col items-center">
+                        <p className="text-xs text-gray-700">Proof:</p>
+                        <img
+                          src={`data:image/jpeg;base64,${record.proof_base64}`}
+                          alt="Proof of attendance"
+                          className="mt-1 w-40 h-auto object-contain border border-gray-300 rounded"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-      </>
-    )}
-  </div>
-);
+          )}
+        </>
+      )}
+    </div>
+  );
 }

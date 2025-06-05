@@ -283,6 +283,40 @@ const AttendingCourse = () => {
     return date.toLocaleDateString("en-US", options);
   };
 
+  const handleUnenroll = useCallback(
+    async (courseId: number) => {
+      if (!user?.id) {
+        toast.error("User not logged in.");
+        return;
+      }
+
+      try {
+        // Using the specified DELETE /enrollments route with only course_id in the body
+        const response = await fetch("/api/enrollments", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ course_id: courseId }), // Only course_id as per API spec
+          credentials: "include", // Essential for sending session cookies (e.g., JWT, session ID)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          toast.success(data.message || "Unenrolled from course successfully!");
+          setShowCourseInfo(false); // Close the CourseShow modal after successful unenrollment
+        } else {
+          // Use data.error from the backend's error response (e.g., "You are not enrolled in this course.")
+          toast.error(data.error || "Failed to unenroll from course.");
+          console.error("Unenroll error:", data);
+        }
+      } catch (error) {
+        console.error("Network error during unenrollment:", error);
+        toast.error("Network error during unenrollment.");
+      }
+    },
+    [user?.id],
+  ); // Dependency on user.id
+
   // --- Conditional Rendering for Loading/Error States ---
   if (authLoading || isLoadingCourse || isLoadingSessions) {
     return (
@@ -395,6 +429,7 @@ const AttendingCourse = () => {
             course={course}
             onCancel={() => setShowCourseInfo(false)}
             onUnenroll={() => {
+              handleUnenroll(courseId);
               toast.success("Unenrolled from course!");
               setShowCourseInfo(false);
               router.push("/attending");

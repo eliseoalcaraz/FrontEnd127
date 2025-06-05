@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Function to handle logout
   const logout = useCallback(async () => {
     try {
-      const response = await fetch("/api/signout", { method: "POST" }); // Use the proxy
+      const response = await fetch("/api/logout", { method: "POST" }); // Use the proxy
       if (response.ok) {
         setUser(null);
         toast.success("Logged out successfully.");

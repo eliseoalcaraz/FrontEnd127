@@ -137,7 +137,7 @@ const Attending = () => {
           ) : (
             courses.map((course) => (
               <FolderCard
-                key={course.enrollment_id}
+                key={course.course_id}
                 title={course.name}
                 onClick={() => handleClickCourse(course.course_id)}
               />

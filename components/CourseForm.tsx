@@ -37,6 +37,7 @@ const courseFormSchema = z.object({
 
 type CourseFormProps = {
   onClose: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onCreate: (course: any) => void;
 };
 
@@ -71,7 +72,7 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
             toast.error("Could not detect location.");
           }
           console.error("Geolocation error:", error);
-        }
+        },
       );
     } else {
       toast.error("Geolocation not supported by this browser.");
@@ -106,7 +107,7 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
       toast.error(
         `There was an error: ${
           error instanceof Error ? error.message : String(error)
-        }`
+        }`,
       );
     }
   };
