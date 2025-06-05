@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -8,20 +9,14 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormField, // Ensure this is correctly imported
+  FormField,
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
-
+import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
-
-import Link from "next/link";
 import { toast } from "sonner";
-//import { useRouter } from "next/navigation";
 
-// Ensure FormType is defined, e.g., globally or in types/index.d.ts
-// For this example, let's define it here if it's not global
 type FormType = "sign-in" | "sign-up";
 
 const authFormSchema = (type: FormType) => {
@@ -36,8 +31,7 @@ const authFormSchema = (type: FormType) => {
 };
 
 const AuthForm = ({ type }: { type: FormType }) => {
-  //const router = useRouter();
-  const { login } = useAuth(); // Get the login function from context
+  const { login } = useAuth();
   const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,7 +45,7 @@ const AuthForm = ({ type }: { type: FormType }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const endpoint = type === "sign-up" ? "/signup" : "/signin";
-      const apiUrl = `/api${endpoint}`; // Using the proxy in next.config.ts
+      const apiUrl = `/api${endpoint}`;
 
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -64,19 +58,14 @@ const AuthForm = ({ type }: { type: FormType }) => {
       const data = await response.json();
 
       if (response.ok) {
-        // Call the login function from AuthContext to update global state
-        login({ id: data.user_id, name: data.name, email: data.email }); // Pass relevant user data
-        // The router.push('/home') is now handled by the AuthLayout via context update
+        login({ id: data.user_id, name: data.name, email: data.email });
       } else {
         toast.error(data.error || "An error occurred.");
         console.error("API Error:", data.error);
       }
     } catch (error: unknown) {
-      // FIX: Changed 'any' to 'unknown'
-      console.error("Network or unexpected error:", error);
-      // FIX: Type guard for 'error.message'
       toast.error(
-        `There was an error: ${error instanceof Error ? error.message : String(error)}`,
+        `There was an error: ${error instanceof Error ? error.message : String(error)}`
       );
     }
   }
@@ -85,18 +74,26 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
   return (
     <div
-      className="min-h-screen flex flex-col justify-end px-4 w-full max-w-md "
-      style={{ backgroundColor: "#FDFDFD" }}
+      className="min-h-screen flex flex-col justify-end px-4 w-full max-w-md"
+      style={{
+        background:
+          "linear-gradient(167deg, #890000 0%, #890000 47.38%, #890000 100%)",
+      }}
     >
-      <div className="flex justify-center items-center">
-        <img src="/img/logo.png" alt="Attends Logo" className="h-64 w-auto" />
+      <div className="flex-1 flex flex-col items-center justify-center w-full">
+        <h1 className="text-white text-4xl font-bold mb-10 mt-10">Attends</h1>
       </div>
-
-      <div className="bg-other w-full max-w-md mx-auto rounded-t-3xl px-6 py-8 shadow-md">
+      <div
+        className="w-full max-w-md mx-auto rounded-t-3xl px-6 py-8 shadow-lg bg-white"
+        style={{
+          borderTopLeftRadius: "2rem",
+          borderTopRightRadius: "2rem",
+        }}
+      >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {!isSignIn && (
-              <FormField // This should now be correctly recognized
+              <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
@@ -105,16 +102,16 @@ const AuthForm = ({ type }: { type: FormType }) => {
                       <Input
                         placeholder="Name"
                         {...field}
-                        className="h-10 px-3 text-sm border rounded-md w-full py-5 text-white"
+                        className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5 text-black bg-white"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs min-h-[16px] text-white" />
+                    <FormMessage className="text-xs min-h-[16px] text-red-600" />
                   </FormItem>
                 )}
               />
             )}
 
-            <FormField // This should now be correctly recognized
+            <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
@@ -123,15 +120,15 @@ const AuthForm = ({ type }: { type: FormType }) => {
                     <Input
                       placeholder="Email"
                       {...field}
-                      className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5 text-white"
+                      className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5 text-black bg-white"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs min-h-[16px] text-white" />
+                  <FormMessage className="text-xs min-h-[16px] text-red-600" />
                 </FormItem>
               )}
             />
 
-            <FormField // This should now be correctly recognized
+            <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
@@ -141,28 +138,31 @@ const AuthForm = ({ type }: { type: FormType }) => {
                       type="password"
                       placeholder="Password"
                       {...field}
-                      className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5 text-white"
+                      className="h-10 px-3 text-sm border border-gray-300 rounded-md w-full py-5 text-black bg-white"
                     />
                   </FormControl>
-                  <FormMessage className="text-xs min-h-[16px] text-white" />
+                  <FormMessage className="text-xs min-h-[16px] text-red-600" />
                 </FormItem>
               )}
             />
 
             <Button
               type="submit"
-              className="mb-4 w-full py-7 rounded-full text-black font-semibold text-center cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]"
-              style={{ backgroundColor: "#FDFDFD" }}
+              className="mb-4 w-full py-8 rounded-full text-white font-semibold text-center cursor-pointer shadow-lg transition-all text-md"
+              style={{
+                backgroundColor: "#890000",
+                boxShadow: "0 6px 12px 0 rgba(0,0,0,0.15)",
+              }}
             >
               {type === "sign-in" ? "Login" : "Sign Up"}
             </Button>
           </form>
         </Form>
 
-        <p className="text-center text-sm text-white mt-4 mb-8">
+        <p className="text-center text-base text-black mt-4 mb-2">
           {isSignIn ? "Don't" : "Already"} have an account?{" "}
           <Link href={isSignIn ? "/sign-up" : "/sign-in"}>
-            <span className="font-bold cursor-pointer text-[#4a915f]">
+            <span className="font-bold cursor-pointer text-[#890000]">
               {isSignIn ? "Sign up" : "Login"}
             </span>
           </Link>

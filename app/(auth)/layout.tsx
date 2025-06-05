@@ -25,7 +25,7 @@ function AuthLayout({
     return null; // Or a loading spinner, or a simple message
   }
   return (
-    <div className="flex items-center justify-center mx-auto max-w-7xl min-h-screen max-sm:px-4  bg-back">
+    <div className="flex items-center justify-center mx-auto max-w-7xl min-h-screen max-sm:px-4 w-full bg-gradient-to-b from-[#890000] to-[#890000]">
       {children}
     </div>
   );

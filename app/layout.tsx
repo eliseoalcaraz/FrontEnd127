@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-back`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-b from-[#890000] to-[#890000] text-black font-sans`}
       >
         <AuthProvider>{children}</AuthProvider>
         <Toaster />

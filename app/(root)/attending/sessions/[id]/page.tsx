@@ -178,7 +178,7 @@ const SessionSummary = () => {
       <Header
         // Display session date in the header
         title={getDateSession(sessionData.start_time)}
-        onBack={() => router.back()} // Allows going back to the previous page (e.g., course page)
+        onClick={() => router.back()} // Allows going back to the previous page (e.g., course page)
       />
 
       <div className="flex-1 flex flex-col items-center justify-center gap-6 px-4 text-center">
