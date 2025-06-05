@@ -137,7 +137,7 @@ const Home = () => {
           
           {/* Logo */}
           <div className="absolute bottom-8 left-8 w-20">
-            <img src="/Logo.png" alt="Logo" className="w-full h-auto" />
+            <img src="/home-logo.png" alt="Logo" className="w-full h-auto" />
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ export default function HomePage() {
          }}>
       
       {/* Logo */}
-      <img src="/Logo.png" alt="Attends Logo" className="h-32 w-auto mb-4" />
+      <img src="/home-logo.png" alt="Attends Logo" className="h-32 w-auto mb-4" />
       
       {/* Attends Text */}
       <h1 className="text-white mb-16" 

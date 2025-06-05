@@ -280,7 +280,7 @@ const AttendingCourse = () => {
 
         {/* Logo at lower-left - fixed position */}
         <div className="fixed bottom-8 left-8 z-40">
-          <img src="/Logo.png" alt="Logo" className="w-12 h-12" />
+          <img src="/home-logo.png" alt="Logo" className="w-12 h-12" />
         </div>
       </div>
     </div>
