@@ -107,39 +107,95 @@ const Hosting = () => {
   }
 
   return (
-    <div className="w-full min-h-screen flex justify-center">
-      <div className="min-h-screen flex flex-col items-center justify-start w-full max-w-md gap-10 mb-10">
-        <div className="w-full p-8">
-          <div className="flex gap-2 items-center justify-center bg-myred text-white font-medium text-lg px-20 py-5 rounded-full cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]">
+    <div 
+      className="w-full min-h-screen flex justify-center relative"
+      style={{
+        background: 'linear-gradient(180deg, #000000 0%, #4D0000 20%, #D9A3A3 20%, #D9A3A3 100%)',
+        boxShadow: '0px 4px 4px rgba(76, 0, 0, 0.4)'
+      }}
+    >
+      <div className="min-h-screen flex flex-col items-center justify-start w-full max-w-md mb-10">
+        {/* Header section in dark area */}
+        <div className="w-full pt-12 pb-4 flex justify-center items-center" style={{ height: '20vh' }}>
+          <div 
+            className="flex gap-2 items-center justify-center text-white px-20 py-5 cursor-pointer shadow-[0px_4px_4px_rgba(0,0,0,0.25)] backdrop-blur-[4px]"
+            style={{
+              backgroundColor: '#890000',
+              border: '1.5px solid #F7C9C9',
+              borderRadius: '10px'
+            }}
+          >
             <img src="/create.svg" alt="Create" className="w-8 h-8" />
-            <p className="underline">Hosting</p>
+            <p 
+              className="underline" 
+              style={{
+                fontFamily: 'Karma',
+                fontWeight: '300',
+                fontSize: '18px',
+                letterSpacing: '0.03em'
+              }}
+            >
+              Hosting
+            </p>
           </div>
         </div>
 
-        <div className="flex flex-col w-full px-8 gap-6">
+        {/* Courses container - repositioned with better spacing in light area */}
+        <div className="flex flex-col w-full px-8 py-8 gap-6 flex-grow">
           {courses.length === 0 ? (
-            <p className="text-center text-gray-600">
-              You are not hosting any courses yet. Click the &apos;+&apos;
-              button to create one!
-            </p>
+            <div className="flex items-center justify-center h-64">
+              <p 
+                className="text-center text-gray-600 px-4"
+                style={{
+                  fontFamily: 'Karma',
+                  fontWeight: '400',
+                  fontSize: '16px',
+                  letterSpacing: '0.03em'
+                }}
+              >
+                You are not hosting any courses yet. Click the &apos;+&apos;
+                button to create one!
+              </p>
+            </div>
           ) : (
-            courses.map((course) => (
-              <TitleCard
-                key={course.course_id}
-                title={course.name}
-                onClick={() => handleClickCourse(course.course_id)}
-              />
-            ))
+            <div className="space-y-4 mt-4">
+              {courses.map((course) => (
+                <div 
+                  key={course.course_id}
+                  className="bg-red-800 text-white px-6 py-6 cursor-pointer shadow-lg flex items-center justify-center text-center hover:bg-red-700 transition-colors duration-200"
+                  onClick={() => handleClickCourse(course.course_id)}
+                  style={{
+                    fontFamily: 'Karma',
+                    fontWeight: '400',
+                    fontSize: '28px',
+                    letterSpacing: '0.03em',
+                    borderRadius: '12px',
+                    minHeight: '80px'
+                  }}
+                >
+                  {course.name}
+                </div>
+              ))}
+            </div>
           )}
+        </div>
+
+        {/* Logo at lower-left - fixed position */}
+        <div className="fixed bottom-8 left-8 z-40">
+          <img src="/Logo.png" alt="Logo" className="w-12 h-12" />
         </div>
 
         {/* Floating action button to open CourseForm */}
         <div
-          className="bg-myred h-14 w-14 rounded-full cursor-pointer flex items-center justify-center self-end fixed bottom-8 right-8 z-40" // Added fixed positioning
+          className="h-14 w-14 cursor-pointer flex items-center justify-center fixed bottom-8 right-8 z-40 hover:bg-red-700 transition-colors duration-200"
+          style={{
+            backgroundColor: '#890000',
+            borderRadius: '10px',
+            boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)'
+          }}
           onClick={() => setShowForm(true)}
         >
-          <img src="/add.svg" alt="Create New Course" className="w-8 h-8" />{" "}
-          {/* Changed enter.svg to add.svg for clarity */}
+          <img src="/add.svg" alt="Create New Course" className="w-8 h-8" />
         </div>
 
         {showForm && (
