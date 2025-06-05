@@ -6,9 +6,7 @@ import { toast } from "sonner"; // For notifications
 import { useAuth } from "@/contexts/AuthContext"; // Import useAuth
 
 import CourseForm from "@/components/CourseForm";
-import TitleCard from "@/components/TitleCard";
 import Header from "@/components/Header"; // Import your headers component
-import CalendarCard from "@/components/CalendarCard"
 import FolderCard from "@/components/FolderCard";
 
 // Remove the mock data import
@@ -117,7 +115,8 @@ const Hosting = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 w-full w-max-3xl px-4 md:px-8 gap-2 mt-10">
           {courses.length === 0 ? (
             <p className="text-center text-gray-600 col-span-full">
-              You are not hosting any courses yet. Click the &apos;+&apos; button to create one!
+              You are not hosting any courses yet. Click the &apos;+&apos;
+              button to create one!
             </p>
           ) : (
             courses.map((course) => (

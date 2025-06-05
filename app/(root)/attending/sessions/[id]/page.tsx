@@ -25,7 +25,9 @@ interface AttendanceRecord {
   status: "Present" | "Late" | "Absent";
   late_minutes: number | null;
   joined_at: number;
-  message?: string; // Backend might send a message for "Absent" status
+  user_geolocation_latitude: number | null; // Added based on new API
+  user_geolocation_longitude: number | null; // Added based on new API
+  proof_base64: string | null; // Added based on new API
 }
 
 const SessionSummary = () => {
@@ -65,23 +67,29 @@ const SessionSummary = () => {
       }
       setSessionData(sessionJson);
 
-      // 2. Fetch User's Attendance Status for this Session from /api/sessions/<session_id>/my-attendance
+      // 2. Fetch User's Attendance Status for this Session from /api/users/<user_id>/attendances
+      // We will then filter this list to find the specific attendance for the current sessionId
       const attendanceResponse = await fetch(
-        `/api/sessions/${sessionId}/attendances`,
+        `/api/users/${user.id}/attendances`,
       );
       const attendanceJson = await attendanceResponse.json();
 
       if (attendanceResponse.ok) {
-        // Backend now returns { status: "Absent" } if no record, or the actual record
-        setAttendanceRecord(attendanceJson);
+        // Find the attendance record for the current session
+        const userAttendanceForSession = attendanceJson.find(
+          (record: AttendanceRecord) => record.session_id === sessionId,
+        );
+        setAttendanceRecord(userAttendanceForSession || null); // Set to null if no record found for this session
       } else {
         // If there's an error fetching attendance, log it but don't block session display
         console.error(
           "Error fetching attendance status:",
-          attendanceJson.error,
+          attendanceJson.error || attendanceJson.message,
         );
         toast.error(
-          attendanceJson.error || "Failed to fetch attendance status.",
+          attendanceJson.error ||
+            attendanceJson.message ||
+            "Failed to fetch attendance status.",
         );
         setAttendanceRecord(null); // Ensure no old attendance data is displayed
       }
@@ -220,18 +228,32 @@ const SessionSummary = () => {
                     Joined at: {formatTime(attendanceRecord.joined_at)}
                   </p>
                 )}
-              {/* You might want to display a message if status was derived as "Absent" from backend */}
-              {attendanceRecord.status === "Absent" &&
-                attendanceRecord.message && (
+              {/* Display geolocation if available */}
+              {attendanceRecord.user_geolocation_latitude !== null &&
+                attendanceRecord.user_geolocation_longitude !== null && (
                   <p className="text-sm text-gray-700">
-                    {attendanceRecord.message}
+                    Location: ({attendanceRecord.user_geolocation_latitude},{" "}
+                    {attendanceRecord.user_geolocation_longitude})
                   </p>
                 )}
+              {/* Display proof if available (you might want to render this as an image) */}
+              {attendanceRecord.proof_base64 && (
+                <div className="text-sm text-gray-700 mt-2 flex flex-col items-center">
+                  {" "}
+                  {/* Added flex, flex-col, items-center */}
+                  <p>Proof:</p>
+                  <img
+                    src={`data:image/jpeg;base64,${attendanceRecord.proof_base64}`}
+                    alt="Proof of attendance"
+                    className="mt-1 w-40 h-auto object-contain border border-gray-300 rounded"
+                  />
+                </div>
+              )}
             </>
           ) : (
-            // Fallback if attendanceRecord is null (e.g., error fetching attendance)
+            // Fallback if attendanceRecord is null (e.g., error fetching attendance or no record found)
             <p className="text-lg font-semibold text-gray-600">
-              Attendance status not available.
+              Attendance status not available for this session.
             </p>
           )}
         </div>

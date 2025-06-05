@@ -4,7 +4,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import TitleCard from "@/components/TitleCard";
 import JoinCourse from "@/components/JoinCourse";
 import Header from "@/components/Header";
 import FolderCard from "@/components/FolderCard";
@@ -127,12 +126,13 @@ const Attending = () => {
   return (
     <div className="w-full min-h-screen flex justify-center">
       <div className="min-h-screen flex flex-col items-center justify-start w-full gap-10 mb-10">
-        <Header title="Attending" onClick={() => router.push('/home')}/>
+        <Header title="Attending" onClick={() => router.push("/home")} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 w-full px-4 md:px-8 gap-10 mt-10">
           {courses.length === 0 ? (
             <p className="text-center text-gray-600 col-span-full">
-              You are not attending any courses yet. Click the &apos;+&apos; button to join one!
+              You are not attending any courses yet. Click the &apos;+&apos;
+              button to join one!
             </p>
           ) : (
             courses.map((course) => (

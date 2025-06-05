@@ -1,15 +1,14 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 
-import TitleCard from "@/components/TitleCard";
 import SessionForm from "@/components/SessionForm";
 import CourseForm2 from "@/components/CourseForm2"; // <--- IMPORT YOUR COURSE FORM HERE
 import Header from "@/components/Header";
-import CalendarCard from "@/components/CalendarCard"
+import CalendarCard from "@/components/CalendarCard";
 
 interface Course {
   course_id: number;
@@ -124,12 +123,15 @@ const HostingCourse = () => {
   };
 
   // <--- NEW HANDLERS FOR COURSE FORM ---
-  const handleUpdateCourse = async (id: number, updatedData: CourseFormData) => {
+  const handleUpdateCourse = async (
+    id: number,
+    updatedData: CourseFormData,
+  ) => {
     try {
       const response = await fetch(`/api/courses/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           // Include authorization token if needed, e.g., 'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(updatedData),
@@ -151,13 +153,17 @@ const HostingCourse = () => {
 
   const handleDeleteCourse = async (id: number) => {
     // Optional: Add a confirmation dialog before deleting
-    if (!window.confirm("Are you sure you want to delete this course? All associated sessions will also be removed.")) {
-        return;
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this course? All associated sessions will also be removed.",
+      )
+    ) {
+      return;
     }
 
     try {
       const response = await fetch(`/api/courses/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         // Include authorization token if needed
       });
 
@@ -218,41 +224,60 @@ const HostingCourse = () => {
   return (
     <div className="w-full min-h-screen flex justify-center">
       <div className="min-h-screen flex flex-col items-center justify-start  w-full gap-10 mb-10">
-        <Header title="Hosting" onClick={() => router.push('/hosting')} />
-          <div className="w-full max-w-xl bg-white border rounded-xl shadow p-6 flex flex-col gap-3 relative">
-            <button
-              className="absolute top-4 right-4 bg-myred text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition"
-              onClick={() => setShowCourseForm(true)}
-            >
-              Edit
-            </button>
+        <Header title="Hosting" onClick={() => router.push("/hosting")} />
+        <div className="w-full max-w-xl bg-white border rounded-xl shadow p-6 flex flex-col gap-3 relative">
+          <button
+            className="absolute top-4 right-4 bg-myred text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-700 transition"
+            onClick={() => setShowCourseForm(true)}
+          >
+            Edit
+          </button>
+          <div>
+            <span className="block text-xs text-gray-500 font-semibold">
+              Course Name
+            </span>
+            <span className="block text-lg font-bold text-myred">
+              {course.name}
+            </span>
+          </div>
+          <div>
+            <span className="block text-xs text-gray-500 font-semibold">
+              Join Code
+            </span>
+            <span className="block text-base font-mono">
+              {course.join_code}
+            </span>
+          </div>
+          <div className="flex gap-6">
             <div>
-              <span className="block text-xs text-gray-500 font-semibold">Course Name</span>
-              <span className="block text-lg font-bold text-myred">{course.name}</span>
+              <span className="block text-xs text-gray-500 font-semibold">
+                Late Threshold (min)
+              </span>
+              <span className="block text-base">
+                {course.late_threshold_minutes}
+              </span>
             </div>
             <div>
-              <span className="block text-xs text-gray-500 font-semibold">Join Code</span>
-              <span className="block text-base font-mono">{course.join_code}</span>
+              <span className="block text-xs text-gray-500 font-semibold">
+                Present Threshold (min)
+              </span>
+              <span className="block text-base">
+                {course.present_threshold_minutes}
+              </span>
             </div>
-            <div className="flex gap-6">
+          </div>
+          {course.geolocation_latitude !== null &&
+            course.geolocation_longitude !== null && (
               <div>
-                <span className="block text-xs text-gray-500 font-semibold">Late Threshold (min)</span>
-                <span className="block text-base">{course.late_threshold_minutes}</span>
-              </div>
-              <div>
-                <span className="block text-xs text-gray-500 font-semibold">Present Threshold (min)</span>
-                <span className="block text-base">{course.present_threshold_minutes}</span>
-              </div>
-            </div>
-            {(course.geolocation_latitude !== null && course.geolocation_longitude !== null) && (
-              <div>
-                <span className="block text-xs text-gray-500 font-semibold">Geolocation</span>
+                <span className="block text-xs text-gray-500 font-semibold">
+                  Geolocation
+                </span>
                 <span className="block text-base">
                   {course.geolocation_latitude}, {course.geolocation_longitude}
                 </span>
               </div>
             )}
-          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 w-full px-8 gap-6">
           {sessions.length === 0 ? (
@@ -288,17 +313,19 @@ const HostingCourse = () => {
         )}
 
         {/* Conditional Rendering for CourseForm */}
-        {showCourseForm && course && ( // <--- RENDER COURSE FORM HERE
-          <CourseForm2
-            onClose={() => setShowCourseForm(false)}
-            initialCourseData={course} // Pass the current course data to pre-fill the form
-            onUpdate={handleUpdateCourse}
-            onDelete={handleDeleteCourse}
-          />
-        )}
+        {showCourseForm &&
+          course && ( // <--- RENDER COURSE FORM HERE
+            <CourseForm2
+              onClose={() => setShowCourseForm(false)}
+              initialCourseData={course} // Pass the current course data to pre-fill the form
+              onUpdate={handleUpdateCourse}
+              onDelete={handleDeleteCourse}
+            />
+          )}
       </div>
     </div>
   );
 };
 
 export default HostingCourse;
+

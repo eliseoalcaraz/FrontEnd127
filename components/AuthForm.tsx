@@ -1,9 +1,12 @@
+// frontend/components/AuthForm.tsx
 "use client";
 
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react"; // Import useEffect
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,7 +34,8 @@ const authFormSchema = (type: FormType) => {
 };
 
 const AuthForm = ({ type }: { type: FormType }) => {
-  const { login } = useAuth();
+  const { login, isLoggedIn, loading: authLoading } = useAuth(); // Destructure isLoggedIn and authLoading
+  const router = useRouter();
   const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,6 +45,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
       password: "",
     },
   });
+
+  // Effect to check auth status and redirect if already logged in
+  useEffect(() => {
+    if (!authLoading && isLoggedIn) {
+      router.push("/");
+    }
+  }, [authLoading, isLoggedIn, router]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -58,19 +69,64 @@ const AuthForm = ({ type }: { type: FormType }) => {
       const data = await response.json();
 
       if (response.ok) {
-        login({ id: data.user_id, name: data.name, email: data.email });
+        if (type === "sign-up") {
+          const signInResponse = await fetch("/api/signin", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: values.email,
+              password: values.password,
+            }),
+          });
+
+          const signInData = await signInResponse.json();
+
+          if (signInResponse.ok) {
+            login({
+              id: signInData.user_id,
+              name: signInData.name,
+              email: signInData.email,
+            });
+            toast.success("Account created and logged in successfully!");
+            router.push("/");
+          } else {
+            toast.error(signInData.error || "Failed to log in after signup.");
+            console.error("Sign-in after signup error:", signInData.error);
+          }
+        } else {
+          login({ id: data.user_id, name: data.name, email: data.email });
+          toast.success("Logged in successfully!");
+          router.push("/");
+        }
       } else {
         toast.error(data.error || "An error occurred.");
         console.error("API Error:", data.error);
       }
     } catch (error: unknown) {
       toast.error(
-        `There was an error: ${error instanceof Error ? error.message : String(error)}`
+        `There was an error: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
 
   const isSignIn = type === "sign-in";
+
+  // If authentication status is still loading or user is already logged in, show a loading state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <p>Loading authentication status...</p>
+      </div>
+    );
+  }
+
+  // If user is already logged in, they will be redirected by useEffect, so no need to render the form.
+  // This check is mainly for the initial render before useEffect kicks in or if navigation is slow.
+  if (isLoggedIn) {
+    return null; // Or a simple message like "Redirecting..."
+  }
 
   return (
     <div
