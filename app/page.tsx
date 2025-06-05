@@ -25,7 +25,7 @@ export default function HomePage() {
             Get Started
           </button>
         </Link>
-        <Link href="/sign-in">  
+        <Link href="/sign-in">
           <button
             className="w-full py-5 rounded-xl text-base transition"
             style={{

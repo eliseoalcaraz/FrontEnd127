@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,10 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/AuthContext"; // Import useAuth to get user info
-
-// No longer need coursesSample for actual API interaction
-// import { coursesSample } from "@/content/data";
+import { useAuth } from "@/contexts/AuthContext";
 
 const courseFormSchema = z.object({
   name: z.string().min(3, "Course title must be at least 3 characters."),
@@ -39,15 +37,11 @@ const courseFormSchema = z.object({
 
 type CourseFormProps = {
   onClose: () => void;
-  // onCreate is still useful if the parent needs to update its state
-  // with the new course data after the API call, but it will receive
-  // the actual course object returned by the backend.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onCreate: (course: any) => void; // Change type to any or a more specific Course type
+  onCreate: (course: any) => void;
 };
 
 const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
-  const { user, isLoggedIn } = useAuth(); // Get current user info from context
+  const { user, isLoggedIn } = useAuth();
 
   const form = useForm<z.infer<typeof courseFormSchema>>({
     resolver: zodResolver(courseFormSchema),
@@ -56,10 +50,33 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
       join_code: "",
       late_threshold_minutes: 15,
       present_threshold_minutes: 5,
-      geolocation_latitude: 0.0, // Consider getting actual user location as a default
-      geolocation_longitude: 0.0, // Consider getting actual user location as a default
+      geolocation_latitude: 0.0,
+      geolocation_longitude: 0.0,
     },
   });
+
+  // 📍 Auto-detect location on mount
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          form.setValue("geolocation_latitude", position.coords.latitude);
+          form.setValue("geolocation_longitude", position.coords.longitude);
+          toast.success("Location detected successfully.");
+        },
+        (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            toast.error("Location access denied. Please enter it manually.");
+          } else {
+            toast.error("Could not detect location.");
+          }
+          console.error("Geolocation error:", error);
+        }
+      );
+    } else {
+      toast.error("Geolocation not supported by this browser.");
+    }
+  }, [form]);
 
   const onSubmit = async (values: z.infer<typeof courseFormSchema>) => {
     if (!isLoggedIn || !user) {
@@ -70,29 +87,26 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
     try {
       const response = await fetch("/api/courses", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values), // Send form values directly
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // Backend should return the created course object
         toast.success(data.message || "Course created successfully!");
-        onCreate(data.course); // Pass the actual course object from backend
-        onClose(); // Close the form
+        onCreate(data.course);
+        onClose();
       } else {
-        // Handle backend errors (e.g., duplicate join code, validation errors)
         toast.error(data.error || "Failed to create course.");
         console.error("Course creation error:", data.error);
       }
     } catch (error) {
-      // Handle network errors or other unexpected issues
-      console.error("Network or unexpected error creating course:", error);
+      console.error("Network or unexpected error:", error);
       toast.error(
-        `There was an error: ${error instanceof Error ? error.message : String(error)}`,
+        `There was an error: ${
+          error instanceof Error ? error.message : String(error)
+        }`
       );
     }
   };
@@ -103,7 +117,6 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
         <h2 className="text-xl font-semibold mb-4 text-center">New Course</h2>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-
             {/* Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -152,7 +165,7 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
               />
             </div>
 
-            {/* Thresholds in one row */}
+            {/* Thresholds */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Thresholds
@@ -167,7 +180,7 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
                         <Input
                           {...field}
                           type="number"
-                          placeholder="Late threshold (min)"
+                          placeholder="Late threshold"
                           className="py-5 px-4 text-sm"
                         />
                       </FormControl>
@@ -184,7 +197,7 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
                         <Input
                           {...field}
                           type="number"
-                          placeholder="Present threshold (min)"
+                          placeholder="Present threshold"
                           className="py-5 px-4 text-sm"
                         />
                       </FormControl>
@@ -195,7 +208,7 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
               </div>
             </div>
 
-            {/* Geolocations in one row */}
+            {/* Geolocation */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Geolocation
@@ -210,7 +223,7 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
                         <Input
                           {...field}
                           type="number"
-                          placeholder="Latitude (e.g. 10.3157)"
+                          placeholder="Latitude"
                           className="py-5 px-4 text-sm"
                         />
                       </FormControl>
@@ -227,7 +240,7 @@ const CourseForm = ({ onClose, onCreate }: CourseFormProps) => {
                         <Input
                           {...field}
                           type="number"
-                          placeholder="Longitude (e.g. 123.8854)"
+                          placeholder="Longitude"
                           className="py-5 px-4 text-sm"
                         />
                       </FormControl>
